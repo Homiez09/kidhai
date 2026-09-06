@@ -1,0 +1,170 @@
+// ชุดข้อมูลชื่อภาษาไทยสำหรับใช้ generate ข้อมูลทดสอบ (ไม่ใช่ข้อมูลบุคคลจริง)
+// ชื่ออังกฤษ (en) คือคำทับศัพท์ (transliteration) ของชื่อไทยตัวเดียวกัน ไม่ใช่ชื่อสุ่มแยกกัน
+// เพื่อให้ฟิลด์ชื่อไทย/อังกฤษของ "คนเดียวกัน" สอดคล้องกัน
+
+export interface NameEntry {
+  th: string;
+  en: string;
+}
+
+export const MALE_FIRST_NAMES: NameEntry[] = [
+  { th: "สมชาย", en: "Somchai" },
+  { th: "สมศักดิ์", en: "Somsak" },
+  { th: "ประยุทธ", en: "Prayut" },
+  { th: "วิชัย", en: "Wichai" },
+  { th: "อนุชา", en: "Anucha" },
+  { th: "ธนากร", en: "Thanakorn" },
+  { th: "กิตติพงษ์", en: "Kittipong" },
+  { th: "ณัฐพล", en: "Natthapon" },
+  { th: "ปิยะ", en: "Piya" },
+  { th: "สุรชัย", en: "Surachai" },
+  { th: "อดิศักดิ์", en: "Adisak" },
+  { th: "ชัยวัฒน์", en: "Chaiwat" },
+  { th: "พงศกร", en: "Phongsakorn" },
+  { th: "ธีรพงษ์", en: "Theerapong" },
+  { th: "วีระชัย", en: "Weerachai" },
+  { th: "จักรพันธุ์", en: "Chakkraphan" },
+  { th: "นพดล", en: "Noppadol" },
+  { th: "สุเมธ", en: "Sumet" },
+  { th: "ชาญชัย", en: "Chanchai" },
+  { th: "ภาณุวัฒน์", en: "Phanuwat" },
+  { th: "เอกชัย", en: "Ekachai" },
+  { th: "ไพศาล", en: "Phaisan" },
+  { th: "ธวัชชัย", en: "Thawatchai" },
+  { th: "รัฐพล", en: "Rattapon" },
+  { th: "อภิสิทธิ์", en: "Aphisit" },
+  { th: "กฤษณะ", en: "Kritsana" },
+  { th: "วรวุฒิ", en: "Worawut" },
+  { th: "ศักดิ์ดา", en: "Sakda" },
+  { th: "ทศพร", en: "Todsaporn" },
+  { th: "ยุทธนา", en: "Yutthana" },
+  { th: "มานพ", en: "Manop" },
+  { th: "สุริยา", en: "Suriya" },
+  { th: "ปัญญา", en: "Panya" },
+  { th: "วิทวัส", en: "Witthawat" },
+  { th: "ชัชวาล", en: "Chatchawan" },
+  { th: "ณรงค์ฤทธิ์", en: "Narongrit" },
+  { th: "พิพัฒน์", en: "Phiphat" },
+  { th: "ธนพล", en: "Thanaphon" },
+  { th: "สหรัฐ", en: "Saharat" },
+  { th: "อรรถพล", en: "Atthaphon" },
+];
+
+export const FEMALE_FIRST_NAMES: NameEntry[] = [
+  { th: "สมหญิง", en: "Somying" },
+  { th: "วรรณา", en: "Wanna" },
+  { th: "สุนีย์", en: "Sunee" },
+  { th: "อรพินท์", en: "Orapin" },
+  { th: "ปิยะดา", en: "Piyada" },
+  { th: "นงลักษณ์", en: "Nonglak" },
+  { th: "ธัญญา", en: "Thanya" },
+  { th: "กมลวรรณ", en: "Kamonwan" },
+  { th: "ศิริพร", en: "Siriporn" },
+  { th: "จิราภรณ์", en: "Jiraporn" },
+  { th: "พรทิพย์", en: "Porntip" },
+  { th: "รัตนา", en: "Rattana" },
+  { th: "สุภาพร", en: "Supaporn" },
+  { th: "วิภาวรรณ", en: "Wipawan" },
+  { th: "อัจฉรา", en: "Atchara" },
+  { th: "ชลธิชา", en: "Chonthicha" },
+  { th: "ปราณี", en: "Pranee" },
+  { th: "นภัสสร", en: "Napatsorn" },
+  { th: "ธิดารัตน์", en: "Thidarat" },
+  { th: "กัลยา", en: "Kanlaya" },
+  { th: "มณีรัตน์", en: "Maneerat" },
+  { th: "สุดารัตน์", en: "Sudarat" },
+  { th: "ปัทมา", en: "Patama" },
+  { th: "วราภรณ์", en: "Waraporn" },
+  { th: "อรุณี", en: "Arunee" },
+  { th: "ณัฐธิดา", en: "Natthida" },
+  { th: "พิมพ์ชนก", en: "Phimchanok" },
+  { th: "รุ่งนภา", en: "Rungnapha" },
+  { th: "ศศิธร", en: "Sasithorn" },
+  { th: "ชนิดา", en: "Chanida" },
+  { th: "ดวงใจ", en: "Duangjai" },
+  { th: "เบญจวรรณ", en: "Benjawan" },
+  { th: "อารีรัตน์", en: "Areerat" },
+  { th: "กาญจนา", en: "Kanjana" },
+  { th: "นันทนา", en: "Nanthana" },
+  { th: "พัชรินทร์", en: "Patcharin" },
+  { th: "ลัดดาวัลย์", en: "Laddawan" },
+  { th: "วนิดา", en: "Wanida" },
+  { th: "สายฝน", en: "Saifon" },
+  { th: "อำไพ", en: "Amphai" },
+];
+
+export const LAST_NAMES: NameEntry[] = [
+  { th: "ใจดี", en: "Jaidee" },
+  { th: "รักเรียน", en: "Rakrian" },
+  { th: "สุขสวัสดิ์", en: "Suksawat" },
+  { th: "ศรีสุข", en: "Srisuk" },
+  { th: "แสงทอง", en: "Saengthong" },
+  { th: "จันทร์เพ็ญ", en: "Chanphen" },
+  { th: "วงศ์สวัสดิ์", en: "Wongsawat" },
+  { th: "ทองดี", en: "Thongdee" },
+  { th: "มั่งมี", en: "Mangmee" },
+  { th: "รุ่งเรือง", en: "Rungrueang" },
+  { th: "บุญมาก", en: "Boonmak" },
+  { th: "ศิริวัฒน์", en: "Siriwat" },
+  { th: "เจริญสุข", en: "Charoensuk" },
+  { th: "พูลสวัสดิ์", en: "Poonsawat" },
+  { th: "อยู่สบาย", en: "Yusabai" },
+  { th: "แก้วมณี", en: "Kaewmanee" },
+  { th: "ทิพย์วงศ์", en: "Thipwong" },
+  { th: "สายทอง", en: "Saithong" },
+  { th: "ผ่องใส", en: "Phongsai" },
+  { th: "เกษมสุข", en: "Kasemsuk" },
+  { th: "พงษ์พันธุ์", en: "Phongphan" },
+  { th: "วัฒนกุล", en: "Watthanakun" },
+  { th: "ธนวัฒน์", en: "Thanawat" },
+  { th: "สุวรรณกิจ", en: "Suwankit" },
+  { th: "โพธิ์ทอง", en: "Phothong" },
+  { th: "นาคทอง", en: "Nakthong" },
+  { th: "ชัยประเสริฐ", en: "Chaiprasert" },
+  { th: "หอมจันทร์", en: "Homchan" },
+  { th: "ยิ้มแย้ม", en: "Yimyaem" },
+  { th: "คงเจริญ", en: "Khongcharoen" },
+  { th: "ศรีวิไล", en: "Sriwilai" },
+  { th: "บัวขาว", en: "Buakhao" },
+  { th: "มีสุข", en: "Meesuk" },
+  { th: "รักษ์ดี", en: "Rakdee" },
+  { th: "สว่างวงศ์", en: "Sawangwong" },
+  { th: "ทองสุข", en: "Thongsuk" },
+  { th: "พันธุ์ทอง", en: "Phanthong" },
+  { th: "ดำรงศักดิ์", en: "Damrongsak" },
+  { th: "อินทร์แก้ว", en: "Inkaew" },
+  { th: "สุริยะกุล", en: "Suriyakun" },
+];
+
+export const THAI_PROVINCES = [
+  "กรุงเทพมหานคร", "กระบี่", "กาญจนบุรี", "กาฬสินธุ์", "กำแพงเพชร", "ขอนแก่น", "จันทบุรี",
+  "ฉะเชิงเทรา", "ชลบุรี", "ชัยนาท", "ชัยภูมิ", "ชุมพร", "เชียงราย", "เชียงใหม่", "ตรัง",
+  "ตราด", "ตาก", "นครนายก", "นครปฐม", "นครพนม", "นครราชสีมา", "นครศรีธรรมราช", "นครสวรรค์",
+  "นนทบุรี", "นราธิวาส", "น่าน", "บึงกาฬ", "บุรีรัมย์", "ปทุมธานี", "ประจวบคีรีขันธ์", "ปราจีนบุรี",
+  "ปัตตานี", "พระนครศรีอยุธยา", "พังงา", "พัทลุง", "พิจิตร", "พิษณุโลก", "เพชรบุรี", "เพชรบูรณ์",
+  "แพร่", "ภูเก็ต", "มหาสารคาม", "มุกดาหาร", "แม่ฮ่องสอน", "ยโสธร", "ยะลา", "ร้อยเอ็ด",
+  "ระนอง", "ระยอง", "ราชบุรี", "ลพบุรี", "ลำปาง", "ลำพูน", "เลย", "ศรีสะเกษ", "สกลนคร",
+  "สงขลา", "สตูล", "สมุทรปราการ", "สมุทรสงคราม", "สมุทรสาคร", "สระแก้ว", "สระบุรี", "สิงห์บุรี",
+  "สุโขทัย", "สุพรรณบุรี", "สุราษฎร์ธานี", "สุรินทร์", "หนองคาย", "หนองบัวลำภู", "อ่างทอง",
+  "อำนาจเจริญ", "อุดรธานี", "อุตรดิตถ์", "อุทัยธานี", "อุบลราชธานี",
+];
+
+export const THAI_DISTRICT_PREFIXES = ["เมือง", "บาง", "หนอง", "ท่า", "หัวนา", "ดอน", "โพธิ์", "ศรี", "คลอง", "ห้วย"];
+export const THAI_DISTRICT_SUFFIXES = ["ใหญ่", "น้อย", "ทอง", "งาม", "สุข", "ดี", "ใหม่", "เก่า", "หลวง", "กลาง"];
+
+export const COMPANY_SUFFIXES_TH = ["จำกัด", "จำกัด (มหาชน)", "ห้างหุ้นส่วนจำกัด"];
+export const COMPANY_WORDS_TH = [
+  "ไทยพัฒนา", "เจริญกิจ", "รุ่งเรืองทรัพย์", "สยามอินโนเวชั่น", "แอดวานซ์เทคโนโลยี", "โกลบอลเทรดดิ้ง",
+  "ยูไนเต็ดกรุ๊ป", "ซัมมิทโฮลดิ้ง", "ก้าวหน้าดีเวลลอปเมนท์", "เน็กซ์เจนโซลูชั่น", "แพลทินัมกรุ๊ป", "ออลล์อินวัน",
+];
+
+export const JOB_TITLES_TH = [
+  "วิศวกรซอฟต์แวร์", "นักวิเคราะห์ระบบ", "ผู้จัดการฝ่ายขาย", "นักบัญชี", "เจ้าหน้าที่ฝ่ายบุคคล",
+  "นักออกแบบกราฟิก", "ผู้จัดการโครงการ", "เจ้าหน้าที่การตลาด", "พนักงานขับรถ", "ครู",
+  "พยาบาล", "เภสัชกร", "ทนายความ", "สถาปนิก", "ช่างเทคนิค", "เชฟ", "นักข่าว", "ช่างภาพ",
+];
+
+export const BANK_NAMES_TH = [
+  "ธนาคารกรุงเทพ", "ธนาคารกสิกรไทย", "ธนาคารไทยพาณิชย์", "ธนาคารกรุงไทย", "ธนาคารกรุงศรีอยุธยา",
+  "ธนาคารทหารไทยธนชาต", "ธนาคารออมสิน", "ธนาคารเกียรตินาคินภัทร", "ธนาคารซีไอเอ็มบีไทย", "ธนาคารยูโอบี",
+];
