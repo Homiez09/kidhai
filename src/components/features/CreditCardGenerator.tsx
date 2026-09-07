@@ -2,11 +2,32 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { RefreshCw, Download, ClipboardCopy, Eye, EyeOff, LayoutGrid, Table2, Braces } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent } from "@/components/ui/Card";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Typography from "@mui/material/Typography";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import DownloadIcon from "@mui/icons-material/Download";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import ViewModuleIcon from "@mui/icons-material/ViewModule";
+import TableChartOutlinedIcon from "@mui/icons-material/TableChartOutlined";
+import DataObjectIcon from "@mui/icons-material/DataObject";
 import { CopyButton } from "@/components/ui/CopyButton";
-import { cn, copyToClipboard } from "@/lib/utils";
+import { copyToClipboard } from "@/lib/utils";
 import { downloadBlob } from "@/lib/download";
 import {
   CARD_BRANDS,
@@ -32,12 +53,12 @@ interface CardRecord {
 }
 
 const BRAND_GRADIENTS: Record<CardBrand, string> = {
-  Visa: "from-[#1a1f71] to-[#3b5bdb]",
-  Mastercard: "from-[#232323] to-[#4a4a4a]",
-  Amex: "from-[#0f6fa8] to-[#1a8fd1]",
-  JCB: "from-[#0b6e4f] to-[#12a26e]",
-  Discover: "from-[#7a4600] to-[#e77817]",
-  UnionPay: "from-[#7a1f2b] to-[#b5303f]",
+  Visa: "linear-gradient(135deg, #1a1f71, #3b5bdb)",
+  Mastercard: "linear-gradient(135deg, #232323, #4a4a4a)",
+  Amex: "linear-gradient(135deg, #0f6fa8, #1a8fd1)",
+  JCB: "linear-gradient(135deg, #0b6e4f, #12a26e)",
+  Discover: "linear-gradient(135deg, #7a4600, #e77817)",
+  UnionPay: "linear-gradient(135deg, #7a1f2b, #b5303f)",
 };
 
 function randomHolderName(locale: "th" | "en"): string {
@@ -103,137 +124,139 @@ export function CreditCardGenerator() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-xl font-bold tracking-tight">สร้างเลขบัตรเครดิตสำหรับทดสอบ</h1>
-        <p className="text-sm text-muted mt-1">
+    <Stack spacing={3}>
+      <Stack spacing={0.5}>
+        <Typography variant="h5" component="h1">
+          สร้างเลขบัตรเครดิตสำหรับทดสอบ
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
           เลขบัตรผ่านการตรวจสอบด้วยสูตร Luhn ตามมาตรฐานของแต่ละค่ายบัตร —{" "}
-          <span className="font-medium text-danger">สำหรับทดสอบระบบเท่านั้น ไม่ใช่บัตรที่ใช้งานได้จริง</span>
-        </p>
-      </div>
+          <Typography component="span" variant="body2" color="error" sx={{ fontWeight: 600 }}>
+            สำหรับทดสอบระบบเท่านั้น ไม่ใช่บัตรที่ใช้งานได้จริง
+          </Typography>
+        </Typography>
+      </Stack>
 
       <Card>
-        <CardContent className="flex flex-col gap-4 pt-5">
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex flex-wrap items-center gap-1 rounded-lg border border-border p-1">
-              {(["All", ...CARD_BRANDS] as const).map((b) => (
-                <button
-                  key={b}
-                  onClick={() => setBrandFilter(b)}
-                  className={cn(
-                    "rounded-md px-2.5 py-1 text-xs font-medium",
-                    brandFilter === b ? "bg-accent text-accent-foreground" : "text-muted"
-                  )}
-                >
-                  {b === "All" ? "ทุกค่าย" : b}
-                </button>
-              ))}
-            </div>
+        <CardContent>
+          <Stack spacing={2}>
+            <Stack direction="row" spacing={1.5} useFlexGap sx={{ flexWrap: "wrap", alignItems: "center" }}>
+              <ToggleButtonGroup
+                size="small"
+                exclusive
+                value={brandFilter}
+                onChange={(_e, v) => v && setBrandFilter(v)}
+                aria-label="ค่ายบัตร"
+              >
+                {(["All", ...CARD_BRANDS] as const).map((b) => (
+                  <ToggleButton key={b} value={b}>
+                    {b === "All" ? "ทุกค่าย" : b}
+                  </ToggleButton>
+                ))}
+              </ToggleButtonGroup>
 
-            <div className="flex items-center gap-1 rounded-lg border border-border p-1">
-              <button
-                onClick={() => setLocale("th")}
-                className={cn(
-                  "rounded-md px-2.5 py-1 text-xs font-medium",
-                  locale === "th" ? "bg-surface-2 text-foreground" : "text-muted"
-                )}
+              <ToggleButtonGroup
+                size="small"
+                exclusive
+                value={locale}
+                onChange={(_e, v) => v && setLocale(v)}
+                aria-label="ภาษาของชื่อผู้ถือบัตร"
               >
-                ชื่อไทย
-              </button>
-              <button
-                onClick={() => setLocale("en")}
-                className={cn(
-                  "rounded-md px-2.5 py-1 text-xs font-medium",
-                  locale === "en" ? "bg-surface-2 text-foreground" : "text-muted"
-                )}
-              >
-                ชื่ออังกฤษ
-              </button>
-            </div>
+                <ToggleButton value="th">ชื่อไทย</ToggleButton>
+                <ToggleButton value="en">ชื่ออังกฤษ</ToggleButton>
+              </ToggleButtonGroup>
 
-            <div className="flex items-center gap-1 rounded-lg border border-border p-1">
-              {COUNT_PRESETS.map((n) => (
-                <button
-                  key={n}
-                  onClick={() => setCount(n)}
-                  className={cn(
-                    "rounded-md px-2.5 py-1 text-xs font-medium",
-                    count === n ? "bg-surface-2 text-foreground" : "text-muted"
-                  )}
-                >
-                  {n}
-                </button>
-              ))}
-            </div>
+              <ToggleButtonGroup
+                size="small"
+                exclusive
+                value={count}
+                onChange={(_e, v) => v && setCount(v)}
+                aria-label="จำนวนบัตร"
+              >
+                {COUNT_PRESETS.map((n) => (
+                  <ToggleButton key={n} value={n}>
+                    {n}
+                  </ToggleButton>
+                ))}
+              </ToggleButtonGroup>
 
-            <Button onClick={() => generate()}>
-              <RefreshCw size={14} /> สุ่มบัตรใหม่
-            </Button>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center gap-1 rounded-lg border border-border p-0.5">
-              <button
-                onClick={() => setView("visual")}
-                className={cn(
-                  "flex items-center gap-1 rounded-md px-2 py-1 text-xs",
-                  view === "visual" ? "bg-accent text-accent-foreground" : "text-muted"
-                )}
-              >
-                <LayoutGrid size={13} /> การ์ด
-              </button>
-              <button
-                onClick={() => setView("table")}
-                className={cn(
-                  "flex items-center gap-1 rounded-md px-2 py-1 text-xs",
-                  view === "table" ? "bg-accent text-accent-foreground" : "text-muted"
-                )}
-              >
-                <Table2 size={13} /> ตาราง
-              </button>
-              <button
-                onClick={() => setView("json")}
-                className={cn(
-                  "flex items-center gap-1 rounded-md px-2 py-1 text-xs",
-                  view === "json" ? "bg-accent text-accent-foreground" : "text-muted"
-                )}
-              >
-                <Braces size={13} /> JSON
-              </button>
-            </div>
-            <div className="ml-auto flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" onClick={handleCopyAll}>
-                <ClipboardCopy size={13} /> คัดลอก JSON
+              <Button variant="contained" startIcon={<RefreshIcon />} onClick={() => generate()}>
+                สุ่มบัตรใหม่
               </Button>
-              <Button variant="outline" size="sm" onClick={handleDownloadJson}>
-                <Download size={13} /> Export JSON
-              </Button>
-              <Button variant="outline" size="sm" onClick={handleDownloadCsv}>
-                <Download size={13} /> Export CSV
-              </Button>
-            </div>
-          </div>
+            </Stack>
+
+            <Stack direction="row" spacing={1.5} useFlexGap sx={{ flexWrap: "wrap", alignItems: "center" }}>
+              <ToggleButtonGroup
+                size="small"
+                exclusive
+                value={view}
+                onChange={(_e, v) => v && setView(v)}
+                aria-label="รูปแบบการแสดงผล"
+              >
+                <ToggleButton value="visual">
+                  <ViewModuleIcon fontSize="small" sx={{ mr: 0.5 }} /> การ์ด
+                </ToggleButton>
+                <ToggleButton value="table">
+                  <TableChartOutlinedIcon fontSize="small" sx={{ mr: 0.5 }} /> ตาราง
+                </ToggleButton>
+                <ToggleButton value="json">
+                  <DataObjectIcon fontSize="small" sx={{ mr: 0.5 }} /> JSON
+                </ToggleButton>
+              </ToggleButtonGroup>
+
+              <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap", ml: { sm: "auto" } }}>
+                <Button size="small" variant="outlined" startIcon={<ContentCopyIcon />} onClick={handleCopyAll}>
+                  คัดลอก JSON
+                </Button>
+                <Button size="small" variant="outlined" startIcon={<DownloadIcon />} onClick={handleDownloadJson}>
+                  Export JSON
+                </Button>
+                <Button size="small" variant="outlined" startIcon={<DownloadIcon />} onClick={handleDownloadCsv}>
+                  Export CSV
+                </Button>
+              </Stack>
+            </Stack>
+          </Stack>
         </CardContent>
       </Card>
 
       <AdSlot slotId={AD_SLOTS.inContent} format="horizontal" minHeight={90} />
 
       {view === "visual" && (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+        <Box
+          sx={{
+            display: "grid",
+            gap: 2.5,
+            gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", xl: "repeat(3, 1fr)" },
+          }}
+        >
           {cards.map((c, i) => {
             const isRevealed = revealed.has(i);
             const displayNumber = formatCardNumber(c.brand, c.number);
             return (
-              <div
+              <Paper
                 key={i}
-                className={cn(
-                  "relative flex h-52 flex-col justify-between rounded-2xl bg-gradient-to-br p-5 text-white shadow-lg",
-                  BRAND_GRADIENTS[c.brand]
-                )}
+                elevation={4}
+                sx={{
+                  position: "relative",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  height: 208,
+                  p: 2.5,
+                  borderRadius: 3,
+                  color: "#fff",
+                  background: BRAND_GRADIENTS[c.brand],
+                }}
               >
-                <div className="flex items-start justify-between">
-                  <span className="text-sm font-semibold tracking-wide opacity-90">{c.brand}</span>
-                  <button
+                <Stack direction="row" sx={{ alignItems: "flex-start", justifyContent: "space-between" }}>
+                  <Typography variant="subtitle2" sx={{ opacity: 0.9, letterSpacing: 1 }}>
+                    {c.brand}
+                  </Typography>
+                  <IconButton
+                    size="small"
+                    aria-label={isRevealed ? "ซ่อนเลขบัตร" : "แสดงเลขบัตร"}
+                    sx={{ color: "#fff", bgcolor: "rgba(255,255,255,0.15)", "&:hover": { bgcolor: "rgba(255,255,255,0.25)" } }}
                     onClick={() => {
                       setRevealed((prev) => {
                         const next = new Set(prev);
@@ -242,85 +265,108 @@ export function CreditCardGenerator() {
                         return next;
                       });
                     }}
-                    className="rounded-md bg-white/15 p-1.5 hover:bg-white/25"
                   >
-                    {isRevealed ? <EyeOff size={13} /> : <Eye size={13} />}
-                  </button>
-                </div>
+                    {isRevealed ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+                  </IconButton>
+                </Stack>
 
-                <div className="font-mono text-lg tracking-widest">
+                <Typography
+                  sx={{ fontFamily: "var(--font-google-sans-code), monospace", fontSize: 20, letterSpacing: 3 }}
+                >
                   {isRevealed ? displayNumber : displayNumber.replace(/\d(?=\d{4})/g, "•")}
-                </div>
+                </Typography>
 
-                <div className="flex items-end justify-between text-xs">
-                  <div>
-                    <p className="opacity-60 text-[10px] uppercase">Card Holder</p>
-                    <p className="font-medium tracking-wide">{c.holder}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="opacity-60 text-[10px] uppercase">Exp</p>
-                    <p className="font-medium">{c.expiry}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="opacity-60 text-[10px] uppercase">CVV</p>
-                    <p className="font-medium">{isRevealed ? c.cvv : "•••"}</p>
-                  </div>
-                </div>
+                <Stack direction="row" sx={{ alignItems: "flex-end", justifyContent: "space-between" }}>
+                  <Box>
+                    <Typography variant="caption" sx={{ opacity: 0.6, textTransform: "uppercase", fontSize: 10 }}>
+                      Card Holder
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      {c.holder}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ textAlign: "right" }}>
+                    <Typography variant="caption" sx={{ opacity: 0.6, textTransform: "uppercase", fontSize: 10 }}>
+                      Exp
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      {c.expiry}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ textAlign: "right", mr: 4 }}>
+                    <Typography variant="caption" sx={{ opacity: 0.6, textTransform: "uppercase", fontSize: 10 }}>
+                      CVV
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      {isRevealed ? c.cvv : "•••"}
+                    </Typography>
+                  </Box>
+                </Stack>
 
-                <CopyButton
-                  value={JSON.stringify(c, null, 2)}
-                  className="absolute bottom-3 right-3 bg-white/15 hover:bg-white/25 text-white"
-                />
-              </div>
+                <Box sx={{ position: "absolute", bottom: 8, right: 8, color: "#fff" }}>
+                  <CopyButton value={JSON.stringify(c, null, 2)} />
+                </Box>
+              </Paper>
             );
           })}
           {cards.length === 0 && (
-            <p className="col-span-full p-6 text-center text-sm text-muted">ยังไม่มีข้อมูล กด &quot;สุ่มบัตรใหม่&quot;</p>
+            <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center", py: 5, gridColumn: "1 / -1" }}>
+              ยังไม่มีข้อมูล กด &quot;สุ่มบัตรใหม่&quot;
+            </Typography>
           )}
-        </div>
+        </Box>
       )}
 
       {view === "table" && (
-        <Card>
-          <CardContent className="pt-5 overflow-auto scrollbar-thin">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-surface-2">
-                <tr>
-                  {["Brand", "Number", "Expiry", "CVV", "Holder", ""].map((h) => (
-                    <th key={h} className="whitespace-nowrap px-3 py-2 font-semibold text-muted">
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {cards.map((c, i) => (
-                  <tr key={i} className="border-t border-border hover:bg-surface-2/60">
-                    <td className="px-3 py-2">{c.brand}</td>
-                    <td className="whitespace-nowrap px-3 py-2 font-mono">{c.number}</td>
-                    <td className="px-3 py-2">{c.expiry}</td>
-                    <td className="px-3 py-2">{c.cvv}</td>
-                    <td className="whitespace-nowrap px-3 py-2">{c.holder}</td>
-                    <td className="px-2 py-2">
-                      <CopyButton value={JSON.stringify(c, null, 2)} />
-                    </td>
-                  </tr>
+        <TableContainer component={Paper} variant="outlined">
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                {["Brand", "Number", "Expiry", "CVV", "Holder", ""].map((h, i) => (
+                  <TableCell key={i} sx={{ whiteSpace: "nowrap", fontWeight: 600 }}>
+                    {h}
+                  </TableCell>
                 ))}
-              </tbody>
-            </table>
-          </CardContent>
-        </Card>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {cards.map((c, i) => (
+                <TableRow key={i} hover>
+                  <TableCell>{c.brand}</TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap", fontFamily: "var(--font-google-sans-code), monospace" }}>
+                    {c.number}
+                  </TableCell>
+                  <TableCell>{c.expiry}</TableCell>
+                  <TableCell>{c.cvv}</TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap" }}>{c.holder}</TableCell>
+                  <TableCell padding="none">
+                    <CopyButton value={JSON.stringify(c, null, 2)} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
 
       {view === "json" && (
-        <Card>
-          <CardContent className="pt-5">
-            <pre className="max-h-[560px] overflow-auto rounded-xl border border-border bg-surface-2 p-4 text-[11px] leading-relaxed scrollbar-thin font-mono">
-              {jsonOutput}
-            </pre>
-          </CardContent>
-        </Card>
+        <Paper
+          variant="outlined"
+          component="pre"
+          sx={{
+            m: 0,
+            p: 2,
+            maxHeight: 560,
+            overflow: "auto",
+            fontFamily: "var(--font-google-sans-code), monospace",
+            fontSize: 12,
+            lineHeight: 1.7,
+            bgcolor: "action.hover",
+          }}
+        >
+          {jsonOutput}
+        </Paper>
       )}
-    </div>
+    </Stack>
   );
 }

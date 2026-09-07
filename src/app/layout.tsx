@@ -1,20 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Google_Sans, Google_Sans_Code } from "next/font/google";
 import Script from "next/script";
+import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter";
 import { Toaster } from "sonner";
-import { ThemeProvider } from "@/components/theme/ThemeProvider";
-import { MeshBackground } from "@/components/layout/MeshBackground";
+import { Providers } from "@/components/theme/Providers";
 import { ADSENSE_CLIENT_ID, ADSENSE_ENABLED, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// subset "thai" จำเป็นเพราะเนื้อหาเกือบทั้งเว็บเป็นภาษาไทย
+const googleSans = Google_Sans({
+  variable: "--font-google-sans",
+  subsets: ["latin", "thai"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Google Sans Code ไม่มี subset ไทย แต่ใช้กับเลขบัตร/JSON/ชื่อไฟล์ซึ่งเป็น latin ล้วน
+const googleSansCode = Google_Sans_Code({
+  variable: "--font-google-sans-code",
   subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -78,17 +85,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="th"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${googleSans.variable} ${googleSansCode.variable}`}
     >
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
-      <body className="min-h-full flex flex-col text-foreground">
-        <MeshBackground />
-        <ThemeProvider>
-          {children}
-          <Toaster richColors position="bottom-right" theme="system" />
-        </ThemeProvider>
+      <body>
+        <InitColorSchemeScript attribute="data-mui-color-scheme" defaultMode="system" />
+        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+          <Providers>
+            {children}
+            <Toaster richColors position="bottom-right" theme="system" />
+          </Providers>
+        </AppRouterCacheProvider>
 
         {ADSENSE_ENABLED && (
           <Script

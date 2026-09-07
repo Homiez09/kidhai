@@ -1,3 +1,12 @@
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { AdSlot } from "@/components/ads/AdSlot";
 import { AD_SLOTS, SITE_NAME } from "@/lib/site";
 
@@ -36,28 +45,44 @@ const faqJsonLd = {
 
 export function MarketingFaq() {
   return (
-    <section className="px-4 py-12 md:px-8">
+    <Box component="section" sx={{ py: { xs: 6, md: 8 } }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-      <div className="mx-auto flex max-w-4xl flex-col gap-6">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">คำถามที่พบบ่อย</h2>
-          <p className="mt-2 text-sm text-muted">ทุกสิ่งที่ควรรู้ก่อนใช้งาน {SITE_NAME}</p>
-        </div>
+      <Container maxWidth="md">
+        <Stack spacing={4}>
+          <Stack spacing={1} sx={{ textAlign: "center" }}>
+            <Typography variant="h4" component="h2">
+              คำถามที่พบบ่อย
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              ทุกสิ่งที่ควรรู้ก่อนใช้งาน {SITE_NAME}
+            </Typography>
+          </Stack>
 
-        <div className="glass flex flex-col divide-y divide-[var(--border-soft)] rounded-2xl">
-          {FAQ_ITEMS.map((item) => (
-            <details key={item.q} className="group px-5 py-4">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold">
-                {item.q}
-                <span className="shrink-0 text-muted transition-transform group-open:rotate-45">+</span>
-              </summary>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{item.a}</p>
-            </details>
-          ))}
-        </div>
+          <Paper variant="outlined" sx={{ overflow: "hidden" }}>
+            {FAQ_ITEMS.map((item, i) => (
+              <Accordion
+                key={item.q}
+                sx={{
+                  "&::before": { display: "none" },
+                  borderTop: i === 0 ? "none" : "1px solid",
+                  borderColor: "divider",
+                }}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography sx={{ fontWeight: 600 }}>{item.q}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.8 }}>
+                    {item.a}
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </Paper>
 
-        <AdSlot slotId={AD_SLOTS.inContent} format="horizontal" minHeight={90} />
-      </div>
-    </section>
+          <AdSlot slotId={AD_SLOTS.inContent} format="horizontal" minHeight={90} />
+        </Stack>
+      </Container>
+    </Box>
   );
 }

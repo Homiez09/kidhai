@@ -2,21 +2,32 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import {
-  FileText,
-  FileSpreadsheet,
-  Braces,
-  Binary,
-  Image as ImageIcon,
-  FileType as FileTypeIcon,
-  Download,
-  Loader2,
-  Archive,
-  Trash2,
-} from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
-import { cn } from "@/lib/utils";
+import type { SvgIconComponent } from "@mui/icons-material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardHeader from "@mui/material/CardHeader";
+import Divider from "@mui/material/Divider";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Switch from "@mui/material/Switch";
+import TextField from "@mui/material/TextField";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
+import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
+import TableChartOutlinedIcon from "@mui/icons-material/TableChartOutlined";
+import DataObjectIcon from "@mui/icons-material/DataObject";
+import MemoryOutlinedIcon from "@mui/icons-material/MemoryOutlined";
+import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
+import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
+import DownloadIcon from "@mui/icons-material/Download";
+import FolderZipOutlinedIcon from "@mui/icons-material/FolderZipOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { downloadBlob, formatBytes } from "@/lib/download";
 import {
   createTextBlob,
@@ -34,13 +45,14 @@ import { AD_SLOTS } from "@/lib/site";
 
 type FileKind = "txt" | "csv" | "json" | "bin" | "image" | "pdf";
 
-const FILE_KINDS: { key: FileKind; label: string; ext: string; icon: typeof FileText; exact: boolean }[] = [
-  { key: "txt", label: "ข้อความ", ext: "txt", icon: FileText, exact: true },
-  { key: "csv", label: "CSV", ext: "csv", icon: FileSpreadsheet, exact: true },
-  { key: "json", label: "JSON", ext: "json", icon: Braces, exact: true },
-  { key: "bin", label: "Binary", ext: "bin", icon: Binary, exact: true },
-  { key: "image", label: "รูปภาพ", ext: "jpg", icon: ImageIcon, exact: false },
-  { key: "pdf", label: "PDF", ext: "pdf", icon: FileTypeIcon, exact: false },
+// เก็บเป็น component ไม่ใช่ element (ดูเหตุผลใน MarketingHero)
+const FILE_KINDS: { key: FileKind; label: string; ext: string; Icon: SvgIconComponent; exact: boolean }[] = [
+  { key: "txt", label: "ข้อความ", ext: "txt", Icon: DescriptionOutlinedIcon, exact: true },
+  { key: "csv", label: "CSV", ext: "csv", Icon: TableChartOutlinedIcon, exact: true },
+  { key: "json", label: "JSON", ext: "json", Icon: DataObjectIcon, exact: true },
+  { key: "bin", label: "Binary", ext: "bin", Icon: MemoryOutlinedIcon, exact: true },
+  { key: "image", label: "รูปภาพ", ext: "jpg", Icon: ImageOutlinedIcon, exact: false },
+  { key: "pdf", label: "PDF", ext: "pdf", Icon: PictureAsPdfOutlinedIcon, exact: false },
 ];
 
 const SIZE_PRESETS = [
@@ -155,150 +167,165 @@ export function FileGenerator() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-xl font-bold tracking-tight">สร้างไฟล์ทดสอบขนาดต่างๆ</h1>
-        <p className="text-sm text-muted mt-1">
+    <Stack spacing={3}>
+      <Stack spacing={0.5}>
+        <Typography variant="h5" component="h1">
+          สร้างไฟล์ทดสอบขนาดต่างๆ
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
           เลือกชนิดไฟล์ กำหนดขนาด แล้วสร้างเพื่อทดสอบระบบอัปโหลด/จำกัดขนาดไฟล์ได้ทันที
-        </p>
-      </div>
+        </Typography>
+      </Stack>
 
       <Card>
-        <CardHeader>
-          <CardTitle>ชนิดไฟล์</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-3 pt-0 sm:grid-cols-3 md:grid-cols-6">
-          {FILE_KINDS.map((k) => {
-            const Icon = k.icon;
-            const active = kind === k.key;
-            return (
-              <button
+        <CardHeader title={<Typography variant="h6">ชนิดไฟล์</Typography>} />
+        <CardContent sx={{ pt: 0 }}>
+          <Box
+            sx={{
+              display: "grid",
+              gap: 1.5,
+              gridTemplateColumns: { xs: "repeat(2, 1fr)", sm: "repeat(3, 1fr)", md: "repeat(6, 1fr)" },
+            }}
+          >
+            {FILE_KINDS.map((k) => (
+              <Button
                 key={k.key}
+                variant={kind === k.key ? "contained" : "outlined"}
                 onClick={() => setKind(k.key)}
-                className={cn(
-                  "flex flex-col items-center gap-2 rounded-xl border p-4 text-xs font-medium transition-colors",
-                  active ? "border-accent bg-accent/10 text-accent" : "border-border text-muted hover:bg-surface-2"
-                )}
+                sx={{ flexDirection: "column", gap: 1, py: 2 }}
               >
-                <Icon size={20} />
+                <k.Icon />
                 {k.label}
-              </button>
-            );
-          })}
+              </Button>
+            ))}
+          </Box>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>ขนาดไฟล์</CardTitle>
-          <CardDescription>
-            {currentKindDef.exact
+        <CardHeader
+          title={<Typography variant="h6">ขนาดไฟล์</Typography>}
+          subheader={
+            currentKindDef.exact
               ? "ขนาดไฟล์จะตรงตามที่กำหนดแบบเป๊ะๆ (ไบต์)"
               : kind === "image"
               ? "เติม padding ท้ายไฟล์ให้ได้ขนาดตามกำหนด ภาพยังเปิดดูได้ปกติ"
-              : "ขนาด PDF เป็นค่าประมาณ (เพิ่มจำนวนหน้าจนใกล้เคียงเป้าหมาย)"}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4 pt-0">
-          <div className="flex flex-wrap items-center gap-2">
-            {SIZE_PRESETS.filter((p) => p.bytes <= MAX_BYTES[kind]).map((p) => (
-              <button
-                key={p.label}
-                onClick={() => setSizeBytes(p.bytes)}
-                className={cn(
-                  "rounded-lg border px-3 py-1.5 text-xs font-medium",
-                  sizeBytes === p.bytes ? "border-accent bg-accent/10 text-accent" : "border-border text-muted"
-                )}
+              : "ขนาด PDF เป็นค่าประมาณ (เพิ่มจำนวนหน้าจนใกล้เคียงเป้าหมาย)"
+          }
+        />
+        <CardContent sx={{ pt: 0 }}>
+          <Stack spacing={2}>
+            <Stack direction="row" spacing={1.5} useFlexGap sx={{ flexWrap: "wrap", alignItems: "center" }}>
+              <ToggleButtonGroup
+                size="small"
+                exclusive
+                value={sizeBytes}
+                onChange={(_e, v) => v && setSizeBytes(v)}
+                aria-label="ขนาดไฟล์"
               >
-                {p.label}
-              </button>
-            ))}
-            <div className="flex items-center gap-1.5 rounded-lg border border-border px-2 py-1">
-              <input
+                {SIZE_PRESETS.filter((p) => p.bytes <= MAX_BYTES[kind]).map((p) => (
+                  <ToggleButton key={p.label} value={p.bytes}>
+                    {p.label}
+                  </ToggleButton>
+                ))}
+              </ToggleButtonGroup>
+
+              <TextField
                 type="number"
-                min={1}
+                size="small"
+                label="กำหนดเอง (KB)"
                 value={Math.round(sizeBytes / 1024)}
                 onChange={(e) => setSizeBytes(Math.max(1, Number(e.target.value) || 1) * 1024)}
-                className="w-24 bg-transparent text-xs outline-none"
+                slotProps={{ htmlInput: { min: 1 } }}
+                sx={{ width: 150 }}
               />
-              <span className="text-xs text-muted">KB (กำหนดเอง)</span>
-            </div>
-          </div>
-          <p className="text-xs text-muted">
-            ขนาดที่จะสร้าง: <span className="font-semibold text-foreground">{formatBytes(clampedBytes)}</span>
-            {sizeBytes > MAX_BYTES[kind] && ` (จำกัดสูงสุด ${formatBytes(MAX_BYTES[kind])} สำหรับชนิดไฟล์นี้)`}
-          </p>
+            </Stack>
 
-          {kind === "image" && (
-            <div className="flex flex-wrap items-center gap-4 border-t border-border pt-4">
-              <div className="flex flex-wrap items-center gap-1.5">
-                {IMAGE_DIMENSIONS.map((d) => (
-                  <button
-                    key={d.label}
-                    onClick={() => setImageDim(d)}
-                    className={cn(
-                      "rounded-lg border px-2.5 py-1 text-xs",
-                      imageDim.label === d.label
-                        ? "border-accent bg-accent/10 text-accent"
-                        : "border-border text-muted"
-                    )}
+            <Typography variant="body2" color="text.secondary">
+              ขนาดที่จะสร้าง:{" "}
+              <Typography component="span" variant="body2" color="text.primary" sx={{ fontWeight: 600 }}>
+                {formatBytes(clampedBytes)}
+              </Typography>
+              {sizeBytes > MAX_BYTES[kind] && ` (จำกัดสูงสุด ${formatBytes(MAX_BYTES[kind])} สำหรับชนิดไฟล์นี้)`}
+            </Typography>
+
+            {kind === "image" && (
+              <>
+                <Divider />
+                <Stack direction="row" spacing={2} useFlexGap sx={{ flexWrap: "wrap", alignItems: "center" }}>
+                  <ToggleButtonGroup
+                    size="small"
+                    exclusive
+                    value={imageDim.label}
+                    onChange={(_e, v) => v && setImageDim(IMAGE_DIMENSIONS.find((d) => d.label === v)!)}
+                    aria-label="ขนาดภาพ"
                   >
-                    {d.label}
-                  </button>
-                ))}
-              </div>
-              <div className="flex items-center gap-1 rounded-lg border border-border p-1">
-                {(["jpeg", "png"] as ImageFormat[]).map((f) => (
-                  <button
-                    key={f}
-                    onClick={() => setImageFormat(f)}
-                    className={cn(
-                      "rounded-md px-2.5 py-1 text-xs font-medium uppercase",
-                      imageFormat === f ? "bg-surface-2 text-foreground" : "text-muted"
-                    )}
+                    {IMAGE_DIMENSIONS.map((d) => (
+                      <ToggleButton key={d.label} value={d.label}>
+                        {d.label}
+                      </ToggleButton>
+                    ))}
+                  </ToggleButtonGroup>
+
+                  <ToggleButtonGroup
+                    size="small"
+                    exclusive
+                    value={imageFormat}
+                    onChange={(_e, v) => v && setImageFormat(v)}
+                    aria-label="รูปแบบไฟล์ภาพ"
                   >
-                    {f}
-                  </button>
-                ))}
-              </div>
-              <label className="flex items-center gap-1.5 text-xs text-muted">
-                <input
-                  type="checkbox"
-                  checked={useTargetSizeForImage}
-                  onChange={(e) => setUseTargetSizeForImage(e.target.checked)}
-                  className="h-3.5 w-3.5 accent-[var(--accent)]"
-                />
-                บังคับขนาดไฟล์ตามที่กำหนด
-              </label>
-            </div>
-          )}
+                    <ToggleButton value="jpeg">JPEG</ToggleButton>
+                    <ToggleButton value="png">PNG</ToggleButton>
+                  </ToggleButtonGroup>
+
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={useTargetSizeForImage}
+                        onChange={(e) => setUseTargetSizeForImage(e.target.checked)}
+                      />
+                    }
+                    label={<Typography variant="body2">บังคับขนาดไฟล์ตามที่กำหนด</Typography>}
+                  />
+                </Stack>
+              </>
+            )}
+          </Stack>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>จำนวนไฟล์</CardTitle>
-          <CardDescription>สร้างหลายไฟล์พร้อมกันได้ในคลิกเดียว (ดาวน์โหลดรวมเป็น .zip)</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-wrap items-center gap-3 pt-0">
-          <div className="flex items-center gap-1 rounded-lg border border-border p-1">
-            {[1, 2, 5, 10, 20].map((n) => (
-              <button
-                key={n}
-                onClick={() => setCount(n)}
-                className={cn(
-                  "rounded-md px-3 py-1 text-xs font-medium",
-                  count === n ? "bg-accent text-accent-foreground" : "text-muted"
-                )}
-              >
-                {n}
-              </button>
-            ))}
-          </div>
-          <Button onClick={handleGenerate} disabled={isGenerating} size="lg" className="ml-auto">
-            {isGenerating ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
-            {isGenerating ? "กำลังสร้างไฟล์..." : `สร้าง & ดาวน์โหลด ${count > 1 ? `(${count} ไฟล์)` : ""}`}
-          </Button>
+        <CardHeader
+          title={<Typography variant="h6">จำนวนไฟล์</Typography>}
+          subheader="สร้างหลายไฟล์พร้อมกันได้ในคลิกเดียว (ดาวน์โหลดรวมเป็น .zip)"
+        />
+        <CardContent sx={{ pt: 0 }}>
+          <Stack direction="row" spacing={2} useFlexGap sx={{ flexWrap: "wrap", alignItems: "center" }}>
+            <ToggleButtonGroup
+              size="small"
+              exclusive
+              value={count}
+              onChange={(_e, v) => v && setCount(v)}
+              aria-label="จำนวนไฟล์"
+            >
+              {[1, 2, 5, 10, 20].map((n) => (
+                <ToggleButton key={n} value={n}>
+                  {n}
+                </ToggleButton>
+              ))}
+            </ToggleButtonGroup>
+
+            <Button
+              variant="contained"
+              size="large"
+              disabled={isGenerating}
+              onClick={handleGenerate}
+              startIcon={isGenerating ? <CircularProgress size={16} color="inherit" /> : <DownloadIcon />}
+              sx={{ ml: { sm: "auto" } }}
+            >
+              {isGenerating ? "กำลังสร้างไฟล์..." : `สร้าง & ดาวน์โหลด ${count > 1 ? `(${count} ไฟล์)` : ""}`}
+            </Button>
+          </Stack>
         </CardContent>
       </Card>
 
@@ -306,41 +333,57 @@ export function FileGenerator() {
 
       {results.length > 0 && (
         <Card>
-          <CardHeader>
-            <CardTitle>ไฟล์ล่าสุดที่สร้าง</CardTitle>
-            {results.length > 1 && (
-              <Button variant="outline" size="sm" onClick={handleDownloadAllZip}>
-                <Archive size={13} /> ดาวน์โหลดรวม .zip
-              </Button>
-            )}
-          </CardHeader>
-          <CardContent className="flex flex-col gap-2 pt-0">
-            {results.map((f, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-xs"
-              >
-                <span className="font-mono">{f.name}</span>
-                <div className="flex items-center gap-3">
-                  <span className="text-muted">{formatBytes(f.blob.size)}</span>
-                  <button
-                    onClick={() => downloadBlob(f.blob, f.name)}
-                    className="rounded-md p-1.5 text-muted hover:bg-surface-2 hover:text-foreground"
-                  >
-                    <Download size={13} />
-                  </button>
-                  <button
-                    onClick={() => setResults((prev) => prev.filter((_, idx) => idx !== i))}
-                    className="rounded-md p-1.5 text-muted hover:bg-surface-2 hover:text-danger"
-                  >
-                    <Trash2 size={13} />
-                  </button>
-                </div>
-              </div>
-            ))}
+          <CardHeader
+            title={<Typography variant="h6">ไฟล์ล่าสุดที่สร้าง</Typography>}
+            action={
+              results.length > 1 && (
+                <Button
+                  size="small"
+                  variant="outlined"
+                  startIcon={<FolderZipOutlinedIcon />}
+                  onClick={handleDownloadAllZip}
+                >
+                  ดาวน์โหลดรวม .zip
+                </Button>
+              )
+            }
+          />
+          <CardContent sx={{ pt: 0 }}>
+            <Stack spacing={1}>
+              {results.map((f, i) => (
+                <Paper
+                  key={i}
+                  variant="outlined"
+                  sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", px: 2, py: 1 }}
+                >
+                  <Typography variant="body2" sx={{ fontFamily: "var(--font-google-sans-code), monospace" }}>
+                    {f.name}
+                  </Typography>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
+                    <Typography variant="caption" color="text.secondary">
+                      {formatBytes(f.blob.size)}
+                    </Typography>
+                    <IconButton
+                      size="small"
+                      aria-label={`ดาวน์โหลด ${f.name}`}
+                      onClick={() => downloadBlob(f.blob, f.name)}
+                    >
+                      <DownloadIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      aria-label={`ลบ ${f.name} ออกจากรายการ`}
+                      onClick={() => setResults((prev) => prev.filter((_, idx) => idx !== i))}
+                    >
+                      <DeleteOutlinedIcon fontSize="small" />
+                    </IconButton>
+                  </Stack>
+                </Paper>
+              ))}
+            </Stack>
           </CardContent>
         </Card>
       )}
-    </div>
+    </Stack>
   );
 }
