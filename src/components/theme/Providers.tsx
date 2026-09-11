@@ -7,7 +7,7 @@ import { theme } from "@/theme";
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
-    <ThemeProvider theme={theme} defaultMode="system">
+    <ThemeProvider theme={theme} defaultMode="dark">
       <CssBaseline />
       {children}
     </ThemeProvider>

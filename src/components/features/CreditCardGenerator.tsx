@@ -9,12 +9,6 @@ import CardContent from "@mui/material/CardContent";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
@@ -27,6 +21,7 @@ import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import TableChartOutlinedIcon from "@mui/icons-material/TableChartOutlined";
 import DataObjectIcon from "@mui/icons-material/DataObject";
 import { CopyButton } from "@/components/ui/CopyButton";
+import { DataTable, DataTableColumn } from "@/components/ui/DataTable";
 import { copyToClipboard } from "@/lib/utils";
 import { downloadBlob } from "@/lib/download";
 import {
@@ -81,6 +76,22 @@ function generateCard(brandFilter: CardBrand | "All", locale: "th" | "en"): Card
 }
 
 const COUNT_PRESETS = [1, 4, 8, 20, 50];
+
+const CARD_COLUMNS: DataTableColumn<CardRecord>[] = [
+  { key: "brand", label: "Brand", value: (c) => c.brand },
+  // แสดงเลขแบบเว้นวรรคให้อ่านง่าย แต่คัดลอกเป็นตัวเลขล้วนเพื่อวางในฟอร์มทดสอบได้เลย
+  {
+    key: "number",
+    label: "Number",
+    value: (c) => formatCardNumber(c.brand, c.number),
+    copyValue: (c) => c.number,
+    mono: true,
+    nowrap: true,
+  },
+  { key: "expiry", label: "Expiry", value: (c) => c.expiry, mono: true },
+  { key: "cvv", label: "CVV", value: (c) => c.cvv, mono: true },
+  { key: "holder", label: "Holder", value: (c) => c.holder, nowrap: true },
+];
 
 export function CreditCardGenerator() {
   const [brandFilter, setBrandFilter] = useState<CardBrand | "All">("All");
@@ -318,35 +329,18 @@ export function CreditCardGenerator() {
       )}
 
       {view === "table" && (
-        <TableContainer component={Paper} variant="outlined">
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                {["Brand", "Number", "Expiry", "CVV", "Holder", ""].map((h, i) => (
-                  <TableCell key={i} sx={{ whiteSpace: "nowrap", fontWeight: 600 }}>
-                    {h}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {cards.map((c, i) => (
-                <TableRow key={i} hover>
-                  <TableCell>{c.brand}</TableCell>
-                  <TableCell sx={{ whiteSpace: "nowrap", fontFamily: "var(--font-google-sans-code), monospace" }}>
-                    {c.number}
-                  </TableCell>
-                  <TableCell>{c.expiry}</TableCell>
-                  <TableCell>{c.cvv}</TableCell>
-                  <TableCell sx={{ whiteSpace: "nowrap" }}>{c.holder}</TableCell>
-                  <TableCell padding="none">
-                    <CopyButton value={JSON.stringify(c, null, 2)} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Stack spacing={1}>
+          <DataTable
+            rows={cards}
+            columns={CARD_COLUMNS}
+            copyOnCellClick
+            emptyMessage={'ยังไม่มีข้อมูล กด "สุ่มบัตรใหม่"'}
+            rowActions={(c) => <CopyButton value={JSON.stringify(c, null, 2)} />}
+          />
+          <Typography variant="caption" color="text.secondary">
+            คลิกที่ช่องไหนก็ได้เพื่อคัดลอกเฉพาะค่านั้น (ช่องเลขบัตรจะคัดลอกเป็นตัวเลขล้วนไม่มีวรรค)
+          </Typography>
+        </Stack>
       )}
 
       {view === "json" && (

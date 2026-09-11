@@ -15,12 +15,6 @@ import Chip from "@mui/material/Chip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -32,6 +26,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import TableChartOutlinedIcon from "@mui/icons-material/TableChartOutlined";
 import DataObjectIcon from "@mui/icons-material/DataObject";
 import { CopyButton } from "@/components/ui/CopyButton";
+import { DataTable, DataTableColumn } from "@/components/ui/DataTable";
 import { copyToClipboard } from "@/lib/utils";
 import { downloadBlob } from "@/lib/download";
 import { generatePersonRecords, PersonRecord } from "@/lib/generators/person";
@@ -77,6 +72,17 @@ export function PersonGenerator() {
   const selectedFields = useMemo(
     () => FIELD_DEFS.filter((f) => selected.has(f.key)).map((f) => f.key),
     [selected]
+  );
+
+  const columns = useMemo<DataTableColumn<PersonRecord>[]>(
+    () =>
+      selectedFields.map((f) => ({
+        key: f,
+        label: FIELD_DEFS.find((d) => d.key === f)?.label ?? f,
+        value: (r: PersonRecord) => String(r[f] ?? ""),
+        nowrap: true,
+      })),
+    [selectedFields]
   );
 
   const jsonOutput = useMemo(
@@ -256,45 +262,24 @@ export function PersonGenerator() {
             </Stack>
 
             {view === "table" ? (
-              <TableContainer component={Paper} variant="outlined" sx={{ maxHeight: 560 }}>
-                <Table size="small" stickyHeader>
-                  <TableHead>
-                    <TableRow>
-                      {selectedFields.map((f) => (
-                        <TableCell key={f} sx={{ whiteSpace: "nowrap", fontWeight: 600 }}>
-                          {FIELD_DEFS.find((d) => d.key === f)?.label}
-                        </TableCell>
-                      ))}
-                      <TableCell />
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {records.map((r, i) => (
-                      <TableRow key={i} hover>
-                        {selectedFields.map((f) => (
-                          <TableCell key={f} sx={{ whiteSpace: "nowrap" }}>
-                            {String(r[f])}
-                          </TableCell>
-                        ))}
-                        <TableCell padding="none">
-                          <CopyButton
-                            value={JSON.stringify(
-                              Object.fromEntries(selectedFields.map((f) => [f, r[f]])),
-                              null,
-                              2
-                            )}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-                {records.length === 0 && (
-                  <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center", py: 5 }}>
-                    ยังไม่มีข้อมูล กด &quot;สุ่มข้อมูลใหม่&quot;
-                  </Typography>
-                )}
-              </TableContainer>
+              <Stack spacing={1}>
+                <DataTable
+                  rows={records}
+                  columns={columns}
+                  copyOnCellClick
+                  stickyHeader
+                  maxHeight={560}
+                  emptyMessage={'ยังไม่มีข้อมูล กด "สุ่มข้อมูลใหม่"'}
+                  rowActions={(r) => (
+                    <CopyButton
+                      value={JSON.stringify(Object.fromEntries(selectedFields.map((f) => [f, r[f]])), null, 2)}
+                    />
+                  )}
+                />
+                <Typography variant="caption" color="text.secondary">
+                  คลิกที่ช่องไหนก็ได้เพื่อคัดลอกเฉพาะค่านั้น หรือกดปุ่มท้ายแถวเพื่อคัดลอกทั้งแถวเป็น JSON
+                </Typography>
+              </Stack>
             ) : (
               <Paper
                 variant="outlined"

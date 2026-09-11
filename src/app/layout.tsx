@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Google_Sans, Google_Sans_Code } from "next/font/google";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter";
-import { Toaster } from "sonner";
+import { AppToaster } from "@/components/theme/AppToaster";
 import { Providers } from "@/components/theme/Providers";
 import { ADSENSE_CLIENT_ID, ADSENSE_ENABLED, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 import "./globals.css";
@@ -91,11 +92,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body>
-        <InitColorSchemeScript attribute="data-mui-color-scheme" defaultMode="system" />
+        <InitColorSchemeScript attribute="data-mui-color-scheme" defaultMode="dark" />
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <Providers>
             {children}
-            <Toaster richColors position="bottom-right" theme="system" />
+            <AppToaster />
           </Providers>
         </AppRouterCacheProvider>
 
@@ -107,6 +108,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             strategy="afterInteractive"
           />
         )}
+
+        <Analytics />
       </body>
     </html>
   );
