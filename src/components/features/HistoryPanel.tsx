@@ -1,13 +1,31 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Users, CreditCard, FileStack, Trash2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Chip from "@mui/material/Chip";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemText from "@mui/material/ListItemText";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
+import FolderZipOutlinedIcon from "@mui/icons-material/FolderZipOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { getHistory, removeHistoryEntry, clearHistory, HistoryEntry } from "@/lib/history";
 
-const KIND_ICON = { person: Users, card: CreditCard, file: FileStack } as const;
+// เก็บเป็น component ไม่ใช่ element (ดูเหตุผลใน MarketingHero)
+const KIND_ICON = {
+  person: PeopleAltOutlinedIcon,
+  card: CreditCardOutlinedIcon,
+  file: FolderZipOutlinedIcon,
+} as const;
+
 const KIND_LABEL = { person: "ข้อมูลบุคคล", card: "บัตรเครดิต", file: "ไฟล์ทดสอบ" } as const;
 
 function timeAgo(iso: string): string {
@@ -31,64 +49,83 @@ export function HistoryPanel() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold tracking-tight">ประวัติการสร้างข้อมูล</h1>
-          <p className="text-sm text-muted mt-1">บันทึกไว้ในเบราว์เซอร์ของคุณเท่านั้น (localStorage)</p>
-        </div>
+    <Stack spacing={3}>
+      <Stack direction="row" spacing={2} sx={{ alignItems: "flex-start", justifyContent: "space-between" }}>
+        <Stack spacing={0.5}>
+          <Typography variant="h5" component="h1">
+            ประวัติการสร้างข้อมูล
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            บันทึกไว้ในเบราว์เซอร์ของคุณเท่านั้น (localStorage)
+          </Typography>
+        </Stack>
         {entries.length > 0 && (
           <Button
-            variant="outline"
-            size="sm"
+            variant="outlined"
+            color="error"
+            size="small"
+            startIcon={<DeleteOutlinedIcon />}
+            sx={{ flexShrink: 0 }}
             onClick={() => {
               clearHistory();
               setEntries([]);
             }}
           >
-            <Trash2 size={13} /> ล้างประวัติทั้งหมด
+            ล้างประวัติทั้งหมด
           </Button>
         )}
-      </div>
+      </Stack>
 
       <Card>
-        <CardContent className="flex flex-col gap-2 pt-5">
-          {entries.length === 0 && (
-            <p className="py-10 text-center text-sm text-muted">ยังไม่มีประวัติการสร้างข้อมูล</p>
-          )}
-          {entries.map((e) => {
-            const Icon = KIND_ICON[e.kind];
-            return (
-              <div
-                key={e.id}
-                className="flex items-center justify-between rounded-xl border border-border px-4 py-3"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-2 text-muted">
-                    <Icon size={16} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">{e.title}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <Badge>{KIND_LABEL[e.kind]}</Badge>
-                      <span className="text-[11px] text-muted">{timeAgo(e.createdAt)}</span>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  onClick={() => {
-                    removeHistoryEntry(e.id);
-                    setEntries((prev) => prev.filter((x) => x.id !== e.id));
-                  }}
-                  className="rounded-md p-1.5 text-muted hover:bg-surface-2 hover:text-danger"
+        <CardContent sx={{ p: entries.length === 0 ? 3 : 1 }}>
+          {entries.length === 0 ? (
+            <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center", py: 6 }}>
+              ยังไม่มีประวัติการสร้างข้อมูล
+            </Typography>
+          ) : (
+            <List disablePadding>
+              {entries.map((e) => {
+                const KindIcon = KIND_ICON[e.kind];
+                return (
+                <ListItem
+                  key={e.id}
+                  secondaryAction={
+                    <IconButton
+                      edge="end"
+                      aria-label={`ลบ ${e.title}`}
+                      onClick={() => {
+                        removeHistoryEntry(e.id);
+                        setEntries((prev) => prev.filter((x) => x.id !== e.id));
+                      }}
+                    >
+                      <DeleteOutlinedIcon fontSize="small" />
+                    </IconButton>
+                  }
                 >
-                  <Trash2 size={14} />
-                </button>
-              </div>
-            );
-          })}
+                  <ListItemAvatar>
+                    <Avatar variant="rounded" sx={{ bgcolor: "action.hover", color: "text.secondary" }}>
+                      <KindIcon fontSize="small" />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={e.title}
+                    secondary={
+                      <Stack direction="row" spacing={1} component="span" sx={{ alignItems: "center", mt: 0.5 }}>
+                        <Chip label={KIND_LABEL[e.kind]} size="small" />
+                        <Typography variant="caption" color="text.secondary">
+                          {timeAgo(e.createdAt)}
+                        </Typography>
+                      </Stack>
+                    }
+                    slotProps={{ secondary: { component: "div" } }}
+                  />
+                </ListItem>
+                );
+              })}
+            </List>
+          )}
         </CardContent>
       </Card>
-    </div>
+    </Stack>
   );
 }

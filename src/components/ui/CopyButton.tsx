@@ -1,40 +1,39 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy } from "lucide-react";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import CheckIcon from "@mui/icons-material/Check";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { copyToClipboard } from "@/lib/utils";
-import { cn } from "@/lib/utils";
 
-export function CopyButton({
-  value,
-  className,
-  label,
-}: {
-  value: string;
-  className?: string;
-  label?: string;
-}) {
+export function CopyButton({ value, label }: { value: string; label?: string }) {
   const [copied, setCopied] = useState(false);
 
+  const handleCopy = async () => {
+    const ok = await copyToClipboard(value);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    }
+  };
+
+  const icon = copied ? <CheckIcon fontSize="small" color="success" /> : <ContentCopyIcon fontSize="small" />;
+
+  if (label) {
+    return (
+      <Button size="small" variant="outlined" startIcon={icon} onClick={handleCopy}>
+        {label}
+      </Button>
+    );
+  }
+
   return (
-    <button
-      type="button"
-      onClick={async (e) => {
-        e.stopPropagation();
-        const ok = await copyToClipboard(value);
-        if (ok) {
-          setCopied(true);
-          setTimeout(() => setCopied(false), 1200);
-        }
-      }}
-      className={cn(
-        "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-muted hover:text-foreground hover:bg-surface-2 transition-colors",
-        className
-      )}
-      title="คัดลอก"
-    >
-      {copied ? <Check size={13} className="text-accent-2" /> : <Copy size={13} />}
-      {label && <span className="text-xs">{label}</span>}
-    </button>
+    <Tooltip title={copied ? "คัดลอกแล้ว" : "คัดลอก"}>
+      <IconButton size="small" onClick={handleCopy} aria-label="คัดลอก">
+        {icon}
+      </IconButton>
+    </Tooltip>
   );
 }
