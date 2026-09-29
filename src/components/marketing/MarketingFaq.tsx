@@ -7,8 +7,10 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { AdSlot } from "@/components/ads/AdSlot";
-import { AD_SLOTS, SITE_NAME } from "@/lib/site";
+// โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก (ตัวคอมโพเนนต์ยังอยู่ที่ src/components/ads/AdSlot.tsx)
+// import { AdSlot } from "@/components/ads/AdSlot";
+// import { AD_SLOTS, SITE_NAME } from "@/lib/site";
+import { SITE_NAME } from "@/lib/site";
 
 const FAQ_ITEMS = [
   {
@@ -80,7 +82,8 @@ export function MarketingFaq() {
             ))}
           </Paper>
 
-          <AdSlot slotId={AD_SLOTS.inContent} format="horizontal" minHeight={90} />
+          {/* โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก */}
+          {/* <AdSlot slotId={AD_SLOTS.inContent} format="horizontal" minHeight={90} /> */}
         </Stack>
       </Container>
     </Box>

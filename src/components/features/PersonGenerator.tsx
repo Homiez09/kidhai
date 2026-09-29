@@ -32,8 +32,9 @@ import { downloadBlob } from "@/lib/download";
 import { generatePersonRecords, PersonRecord } from "@/lib/generators/person";
 import { FIELD_DEFS, FIELD_GROUPS, DEFAULT_SELECTED_FIELDS, FieldKey } from "@/types/schema";
 import { addHistoryEntry } from "@/lib/history";
-import { AdSlot } from "@/components/ads/AdSlot";
-import { AD_SLOTS } from "@/lib/site";
+// โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก (ตัวคอมโพเนนต์ยังอยู่ที่ src/components/ads/AdSlot.tsx)
+// import { AdSlot } from "@/components/ads/AdSlot";
+// import { AD_SLOTS } from "@/lib/site";
 
 const COUNT_PRESETS = [1, 10, 25, 50, 100, 500];
 
@@ -189,7 +190,8 @@ export function PersonGenerator() {
         </Accordion>
       </Card>
 
-      <AdSlot slotId={AD_SLOTS.inContent} format="horizontal" minHeight={90} />
+      {/* โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก */}
+      {/* <AdSlot slotId={AD_SLOTS.inContent} format="horizontal" minHeight={90} /> */}
 
       <Card>
         <CardHeader

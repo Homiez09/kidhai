@@ -1,12 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import { Google_Sans, Google_Sans_Code } from "next/font/google";
-import Script from "next/script";
+// โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก (ตัวคอมโพเนนต์ยังอยู่ที่ src/components/ads/AdSlot.tsx)
+// import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter";
 import { AppToaster } from "@/components/theme/AppToaster";
 import { Providers } from "@/components/theme/Providers";
-import { ADSENSE_CLIENT_ID, ADSENSE_ENABLED, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
+// import { ADSENSE_CLIENT_ID, ADSENSE_ENABLED, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 // subset "thai" จำเป็นเพราะเนื้อหาเกือบทั้งเว็บเป็นภาษาไทย
@@ -59,7 +61,8 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
-  ...(ADSENSE_ENABLED ? { other: { "google-adsense-account": ADSENSE_CLIENT_ID } } : {}),
+  // โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก (ตัวคอมโพเนนต์ยังอยู่ที่ src/components/ads/AdSlot.tsx)
+  // ...(ADSENSE_ENABLED ? { other: { "google-adsense-account": ADSENSE_CLIENT_ID } } : {}),
 };
 
 export const viewport: Viewport = {
@@ -100,6 +103,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </Providers>
         </AppRouterCacheProvider>
 
+        {/* โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก */}
+        {/*
         {ADSENSE_ENABLED && (
           <Script
             async
@@ -108,6 +113,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             strategy="afterInteractive"
           />
         )}
+        */}
 
         <Analytics />
       </body>

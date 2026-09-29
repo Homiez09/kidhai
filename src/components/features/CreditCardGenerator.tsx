@@ -35,8 +35,9 @@ import {
 import { pick } from "@/lib/random";
 import { MALE_FIRST_NAMES, FEMALE_FIRST_NAMES, LAST_NAMES } from "@/lib/data/thai-names";
 import { addHistoryEntry } from "@/lib/history";
-import { AdSlot } from "@/components/ads/AdSlot";
-import { AD_SLOTS } from "@/lib/site";
+// โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก (ตัวคอมโพเนนต์ยังอยู่ที่ src/components/ads/AdSlot.tsx)
+// import { AdSlot } from "@/components/ads/AdSlot";
+// import { AD_SLOTS } from "@/lib/site";
 
 interface CardRecord {
   brand: CardBrand;
@@ -231,7 +232,8 @@ export function CreditCardGenerator() {
         </CardContent>
       </Card>
 
-      <AdSlot slotId={AD_SLOTS.inContent} format="horizontal" minHeight={90} />
+      {/* โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก */}
+      {/* <AdSlot slotId={AD_SLOTS.inContent} format="horizontal" minHeight={90} /> */}
 
       {view === "visual" && (
         <Box
