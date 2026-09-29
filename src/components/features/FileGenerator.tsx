@@ -40,8 +40,9 @@ import {
   ImageFormat,
 } from "@/lib/generators/file";
 import { addHistoryEntry } from "@/lib/history";
-import { AdSlot } from "@/components/ads/AdSlot";
-import { AD_SLOTS } from "@/lib/site";
+// โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก (ตัวคอมโพเนนต์ยังอยู่ที่ src/components/ads/AdSlot.tsx)
+// import { AdSlot } from "@/components/ads/AdSlot";
+// import { AD_SLOTS } from "@/lib/site";
 
 type FileKind = "txt" | "csv" | "json" | "bin" | "image" | "pdf";
 
@@ -329,7 +330,8 @@ export function FileGenerator() {
         </CardContent>
       </Card>
 
-      <AdSlot slotId={AD_SLOTS.inContent} format="horizontal" minHeight={90} />
+      {/* โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก */}
+      {/* <AdSlot slotId={AD_SLOTS.inContent} format="horizontal" minHeight={90} /> */}
 
       {results.length > 0 && (
         <Card>

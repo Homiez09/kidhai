@@ -20,8 +20,10 @@ import { PersonGenerator } from "@/components/features/PersonGenerator";
 import { CreditCardGenerator } from "@/components/features/CreditCardGenerator";
 import { FileGenerator } from "@/components/features/FileGenerator";
 import { HistoryPanel } from "@/components/features/HistoryPanel";
-import { AdSlot } from "@/components/ads/AdSlot";
-import { AD_SLOTS, SITE_NAME } from "@/lib/site";
+// โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก (ตัวคอมโพเนนต์ยังอยู่ที่ src/components/ads/AdSlot.tsx)
+// import { AdSlot } from "@/components/ads/AdSlot";
+// import { AD_SLOTS, SITE_NAME } from "@/lib/site";
+import { SITE_NAME } from "@/lib/site";
 
 type TabKey = "person" | "card" | "file" | "history";
 
@@ -97,7 +99,8 @@ export function AppShell() {
       <Container maxWidth="xl" sx={{ py: { xs: 3, md: 4 } }}>
         <Stack direction={{ xs: "column", lg: "row" }} spacing={4} sx={{ alignItems: "flex-start" }}>
           <Stack spacing={3} sx={{ flex: 1, minWidth: 0 }}>
-            <AdSlot slotId={AD_SLOTS.topBanner} format="horizontal" minHeight={90} hideOnMobile />
+            {/* โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก */}
+            {/* <AdSlot slotId={AD_SLOTS.topBanner} format="horizontal" minHeight={90} hideOnMobile /> */}
 
             <Box role="tabpanel">
               {tab === "person" && <PersonGenerator />}
@@ -113,7 +116,8 @@ export function AppShell() {
             spacing={2}
             sx={{ display: { xs: "none", lg: "flex" }, width: 300, flexShrink: 0, position: "sticky", top: 152 }}
           >
-            <AdSlot slotId={AD_SLOTS.sidebar} format="rectangle" minHeight={250} />
+            {/* โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก */}
+            {/* <AdSlot slotId={AD_SLOTS.sidebar} format="rectangle" minHeight={250} /> */}
             <Paper variant="outlined" sx={{ p: 2 }}>
               <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1.7 }}>
                 ข้อมูลทั้งหมดสร้างขึ้นแบบสุ่มเพื่อใช้ทดสอบระบบเท่านั้น ไม่ใช่ข้อมูลบุคคลหรือบัตรจริง
