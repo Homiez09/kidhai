@@ -79,6 +79,10 @@ export interface DataTableProps<T> {
     value: string;
     ok: boolean;
   }) => void;
+  /** คอลัมน์แรกสุดสำหรับปุ่มประจำแถว (เช่น ดูรายละเอียด) */
+  leadingActions?: (row: T, index: number) => ReactNode;
+  /** หัวคอลัมน์ของ leadingActions */
+  leadingActionsLabel?: ReactNode;
   /** คอลัมน์ท้ายสุดสำหรับปุ่มประจำแถว */
   rowActions?: (row: T, index: number) => ReactNode;
   getRowKey?: (row: T, index: number) => string | number;
@@ -100,6 +104,8 @@ export function DataTable<T>({
   rows,
   copyOnCellClick = true,
   onCopyCell,
+  leadingActions,
+  leadingActionsLabel,
   rowActions,
   getRowKey,
   emptyMessage = "ยังไม่มีข้อมูล",
@@ -145,6 +151,11 @@ export function DataTable<T>({
       <Table size={size} stickyHeader={stickyHeader}>
         <TableHead>
           <TableRow>
+            {leadingActions && (
+              <TableCell align="center" sx={{ whiteSpace: "nowrap", fontWeight: 600, width: 0 }}>
+                {leadingActionsLabel}
+              </TableCell>
+            )}
             {columns.map((c) => (
               <TableCell key={c.key} align={c.align} sx={{ whiteSpace: "nowrap", fontWeight: 600 }}>
                 {c.label}
@@ -156,6 +167,11 @@ export function DataTable<T>({
         <TableBody>
           {rows.map((row, rowIndex) => (
             <TableRow key={getRowKey?.(row, rowIndex) ?? rowIndex} hover>
+              {leadingActions && (
+                <TableCell align="center" padding="none" sx={{ px: 1 }}>
+                  {leadingActions(row, rowIndex)}
+                </TableCell>
+              )}
               {columns.map((column) => {
                 const cellId = `${rowIndex}:${column.key}`;
                 const text = column.value(row, rowIndex);

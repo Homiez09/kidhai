@@ -25,7 +25,11 @@ import DownloadIcon from "@mui/icons-material/Download";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import TableChartOutlinedIcon from "@mui/icons-material/TableChartOutlined";
 import DataObjectIcon from "@mui/icons-material/DataObject";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import { CopyButton } from "@/components/ui/CopyButton";
+import { PersonDetailDialog } from "@/components/features/PersonDetailDialog";
 import { DataTable, DataTableColumn } from "@/components/ui/DataTable";
 import { copyToClipboard } from "@/lib/utils";
 import { downloadBlob } from "@/lib/download";
@@ -56,6 +60,13 @@ export function PersonGenerator() {
   const [count, setCount] = useState(10);
   const [records, setRecords] = useState<PersonRecord[]>([]);
   const [view, setView] = useState<"table" | "json">("table");
+  const [detailPerson, setDetailPerson] = useState<PersonRecord | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+
+  const openDetail = (person: PersonRecord) => {
+    setDetailPerson(person);
+    setDetailOpen(true);
+  };
 
   const generate = (n: number = count) => {
     const recs = generatePersonRecords(n);
@@ -272,6 +283,14 @@ export function PersonGenerator() {
                   stickyHeader
                   maxHeight={560}
                   emptyMessage={'ยังไม่มีข้อมูล กด "สุ่มข้อมูลใหม่"'}
+                  leadingActionsLabel="Action"
+                  leadingActions={(r) => (
+                    <Tooltip title="ดูรายละเอียด">
+                      <IconButton size="small" onClick={() => openDetail(r)} aria-label={`ดูรายละเอียดรายการที่ ${r.id}`}>
+                        <VisibilityOutlinedIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  )}
                   rowActions={(r) => (
                     <CopyButton
                       value={JSON.stringify(Object.fromEntries(selectedFields.map((f) => [f, r[f]])), null, 2)}
@@ -279,7 +298,7 @@ export function PersonGenerator() {
                   )}
                 />
                 <Typography variant="caption" color="text.secondary">
-                  คลิกที่ช่องไหนก็ได้เพื่อคัดลอกเฉพาะค่านั้น หรือกดปุ่มท้ายแถวเพื่อคัดลอกทั้งแถวเป็น JSON
+                  กดรูปตาเพื่อดูรายละเอียดทีละคน · คลิกที่ช่องไหนก็ได้เพื่อคัดลอกเฉพาะค่านั้น หรือกดปุ่มท้ายแถวเพื่อคัดลอกทั้งแถวเป็น JSON
                 </Typography>
               </Stack>
             ) : (
@@ -303,6 +322,13 @@ export function PersonGenerator() {
           </Stack>
         </CardContent>
       </Card>
+
+      <PersonDetailDialog
+        open={detailOpen}
+        person={detailPerson}
+        fields={selectedFields}
+        onClose={() => setDetailOpen(false)}
+      />
     </Stack>
   );
 }

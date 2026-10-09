@@ -97,7 +97,7 @@ export function AppShell() {
       </AppBar>
 
       <Container maxWidth="xl" sx={{ py: { xs: 3, md: 4 } }}>
-        <Stack direction={{ xs: "column", lg: "row" }} spacing={4} sx={{ alignItems: "flex-start" }}>
+        <Stack direction={{ xs: "column", lg: "row" }} spacing={4} sx={{ alignItems: { xs: "stretch", lg: "flex-start" } }}>
           <Stack spacing={3} sx={{ flex: 1, minWidth: 0 }}>
             {/* โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก */}
             {/* <AdSlot slotId={AD_SLOTS.topBanner} format="horizontal" minHeight={90} hideOnMobile /> */}
