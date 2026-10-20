@@ -7,12 +7,14 @@ import Typography from "@mui/material/Typography";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import FolderZipOutlinedIcon from "@mui/icons-material/FolderZipOutlined";
+import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 
 // เก็บเป็น component ไม่ใช่ element — MUI clone element ที่ส่งเข้า prop icon
 // ถ้าใช้ element เดิมซ้ำระดับโมดูล ลำดับ DOM ฝั่ง server/client จะไม่ตรงกันจน hydration พัง
 const FEATURES = [
+  { Icon: TouchAppOutlinedIcon, label: "สุ่มด่วนชิ้นเดียว & ตรวจสูตรบัตร ปชช." },
   { Icon: PeopleAltOutlinedIcon, label: "ข้อมูลบุคคลไทย/อังกฤษ 30+ ฟิลด์" },
   { Icon: CreditCardOutlinedIcon, label: "เลขบัตรเครดิตทดสอบทุกค่าย (Luhn valid)" },
   { Icon: FolderZipOutlinedIcon, label: "ไฟล์ทดสอบทุกชนิด ทุกขนาด" },

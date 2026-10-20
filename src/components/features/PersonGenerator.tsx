@@ -42,6 +42,40 @@ import { addHistoryEntry } from "@/lib/history";
 
 const COUNT_PRESETS = [1, 10, 25, 50, 100, 500];
 
+const PRESET_PROFILES: { label: string; fields: FieldKey[] }[] = [
+  {
+    label: "สมัครสมาชิกทั่วไป",
+    fields: [
+      "id",
+      "titleTh",
+      "firstNameTh",
+      "lastNameTh",
+      "gender",
+      "thaiNationalId",
+      "phone",
+      "email",
+      "username",
+      "password",
+    ],
+  },
+  {
+    label: "จัดส่งพัสดุ / E-commerce",
+    fields: ["id", "fullNameTh", "phone", "addressTh", "province", "district", "postalCode"],
+  },
+  {
+    label: "การเงิน & ธุรกิจ",
+    fields: ["id", "fullNameTh", "companyName", "taxId", "bankName", "bankAccountNumber"],
+  },
+  {
+    label: "ข้อมูลบุคคลภาษาอังกฤษ",
+    fields: ["id", "firstNameEn", "lastNameEn", "fullNameEn", "gender", "email", "phone"],
+  },
+  {
+    label: "เลือกทั้งหมด",
+    fields: FIELD_DEFS.map((f) => f.key),
+  },
+];
+
 function toCsv(records: PersonRecord[], fields: FieldKey[]): string {
   const header = fields.map((f) => FIELD_DEFS.find((d) => d.key === f)?.label ?? f).join(",");
   const rows = records.map((r) =>
@@ -53,6 +87,22 @@ function toCsv(records: PersonRecord[], fields: FieldKey[]): string {
       .join(",")
   );
   return [header, ...rows].join("\n");
+}
+
+function toSql(records: PersonRecord[], fields: FieldKey[], tableName = "mock_users"): string {
+  if (records.length === 0 || fields.length === 0) return "";
+  const cols = fields.join(", ");
+  const lines = records.map((r) => {
+    const vals = fields
+      .map((f) => {
+        const v = r[f];
+        if (typeof v === "number") return v;
+        return `'${String(v ?? "").replace(/'/g, "''")}'`;
+      })
+      .join(", ");
+    return `INSERT INTO ${tableName} (${cols}) VALUES (${vals});`;
+  });
+  return lines.join("\n");
 }
 
 export function PersonGenerator() {
@@ -138,6 +188,17 @@ export function PersonGenerator() {
     toast.success("ดาวน์โหลดไฟล์ CSV แล้ว");
   };
 
+  const handleDownloadSql = () => {
+    const sql = toSql(records, selectedFields);
+    downloadBlob(new Blob([sql], { type: "text/plain;charset=utf-8" }), `person-data-${Date.now()}.sql`);
+    toast.success("ดาวน์โหลดไฟล์ SQL INSERT แล้ว");
+  };
+
+  const applyPreset = (presetFields: FieldKey[]) => {
+    setSelected(new Set(presetFields));
+    toast.success("เลือกฟิลด์ตามพรีเซ็ตแล้ว");
+  };
+
   return (
     <Stack spacing={3}>
       <Stack spacing={0.5}>
@@ -150,7 +211,7 @@ export function PersonGenerator() {
       </Stack>
 
       <Card>
-        <Accordion defaultExpanded sx={{ "&::before": { display: "none" } }}>
+        <Accordion sx={{ "&::before": { display: "none" } }}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ px: 2.5 }}>
             <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
               <Typography sx={{ fontWeight: 600 }}>เลือกฟิลด์ข้อมูล</Typography>
@@ -158,6 +219,23 @@ export function PersonGenerator() {
             </Stack>
           </AccordionSummary>
           <AccordionDetails sx={{ px: 2.5, pb: 2.5 }}>
+            <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap", mb: 2, alignItems: "center" }}>
+              <Typography variant="caption" sx={{ fontWeight: 700, color: "text.secondary" }}>
+                พรีเซ็ตแนะนำ:
+              </Typography>
+              {PRESET_PROFILES.map((p) => (
+                <Chip
+                  key={p.label}
+                  label={p.label}
+                  size="small"
+                  onClick={() => applyPreset(p.fields)}
+                  variant="outlined"
+                  clickable
+                  sx={{ "&:hover": { borderColor: "primary.main", bgcolor: "action.hover" } }}
+                />
+              ))}
+            </Stack>
+
             <Box
               sx={{
                 display: "grid",
@@ -248,12 +326,15 @@ export function PersonGenerator() {
               </ToggleButtonGroup>
 
               <TextField
-                type="number"
+                type="text"
                 size="small"
                 label="กำหนดเอง"
                 value={count}
-                onChange={(e) => setCount(Math.max(1, Math.min(5000, Number(e.target.value) || 1)))}
-                slotProps={{ htmlInput: { min: 1, max: 5000 } }}
+                onChange={(e) => {
+                  const clean = e.target.value.replace(/\D/g, "");
+                  setCount(clean ? Math.max(1, Math.min(5000, parseInt(clean, 10))) : 1);
+                }}
+                slotProps={{ htmlInput: { inputMode: "numeric", pattern: "[0-9]*", maxLength: 4 } }}
                 sx={{ width: 120 }}
               />
 
@@ -270,6 +351,9 @@ export function PersonGenerator() {
                 </Button>
                 <Button size="small" variant="outlined" startIcon={<DownloadIcon />} onClick={handleDownloadCsv}>
                   Export CSV
+                </Button>
+                <Button size="small" variant="outlined" startIcon={<DownloadIcon />} onClick={handleDownloadSql}>
+                  Export SQL
                 </Button>
               </Stack>
             </Stack>
