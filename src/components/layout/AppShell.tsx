@@ -9,27 +9,26 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import FolderZipOutlinedIcon from "@mui/icons-material/FolderZipOutlined";
 import HistoryOutlinedIcon from "@mui/icons-material/HistoryOutlined";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { PersonGenerator } from "@/components/features/PersonGenerator";
+import { SingleToolsHub } from "@/components/features/SingleToolsHub";
 import { CreditCardGenerator } from "@/components/features/CreditCardGenerator";
 import { FileGenerator } from "@/components/features/FileGenerator";
 import { HistoryPanel } from "@/components/features/HistoryPanel";
-// โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก (ตัวคอมโพเนนต์ยังอยู่ที่ src/components/ads/AdSlot.tsx)
-// import { AdSlot } from "@/components/ads/AdSlot";
-// import { AD_SLOTS, SITE_NAME } from "@/lib/site";
 import { SITE_NAME } from "@/lib/site";
 
-type TabKey = "person" | "card" | "file" | "history";
+type TabKey = "person" | "single" | "card" | "file" | "history";
 
-// เก็บเป็น component ไม่ใช่ element (ดูเหตุผลใน MarketingHero)
+// ลำดับแท็บ: หน้าแรกเป็น UI เดิม (ข้อมูลบุคคล) ส่วนสุ่มเฉพาะอันเป็นแท็บที่ 2
 const TABS = [
   { key: "person" as const, label: "ข้อมูลบุคคล", Icon: PeopleAltOutlinedIcon },
+  { key: "single" as const, label: "สุ่มเฉพาะอัน", Icon: TouchAppOutlinedIcon },
   { key: "card" as const, label: "บัตรเครดิต", Icon: CreditCardOutlinedIcon },
   { key: "file" as const, label: "ไฟล์ทดสอบ", Icon: FolderZipOutlinedIcon },
   { key: "history" as const, label: "ประวัติ", Icon: HistoryOutlinedIcon },
@@ -47,14 +46,13 @@ export function AppShell() {
         elevation={0}
         color="inherit"
         sx={{
-          // โปร่งแสงเล็กน้อยให้เนื้อหาเลื่อนผ่านแล้วยังอ่านหัวข้อออก
           backgroundColor: "rgba(var(--mui-palette-background-paperChannel) / 0.8)",
           backdropFilter: "blur(12px)",
           borderBottom: "1px solid",
           borderColor: "divider",
         }}
       >
-        <Container maxWidth="xl">
+        <Container maxWidth="lg">
           <Toolbar disableGutters sx={{ gap: 1.5, minHeight: { xs: 56, sm: 64 } }}>
             <Box
               sx={{
@@ -96,34 +94,15 @@ export function AppShell() {
         </Container>
       </AppBar>
 
-      <Container maxWidth="xl" sx={{ py: { xs: 3, md: 4 } }}>
-        <Stack direction={{ xs: "column", lg: "row" }} spacing={4} sx={{ alignItems: { xs: "stretch", lg: "flex-start" } }}>
-          <Stack spacing={3} sx={{ flex: 1, minWidth: 0 }}>
-            {/* โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก */}
-            {/* <AdSlot slotId={AD_SLOTS.topBanner} format="horizontal" minHeight={90} hideOnMobile /> */}
-
-            <Box role="tabpanel">
-              {tab === "person" && <PersonGenerator />}
-              {tab === "card" && <CreditCardGenerator />}
-              {tab === "file" && <FileGenerator />}
-              {tab === "history" && <HistoryPanel />}
-            </Box>
-          </Stack>
-
-          {/* แถบข้างเฉพาะจอกว้าง — วางโฆษณาสี่เหลี่ยมกับข้อความกำกับ */}
-          <Stack
-            component="aside"
-            spacing={2}
-            sx={{ display: { xs: "none", lg: "flex" }, width: 300, flexShrink: 0, position: "sticky", top: 152 }}
-          >
-            {/* โฆษณา AdSense ปิดชั่วคราว — เปิดคืนโดยเอา comment ออก */}
-            {/* <AdSlot slotId={AD_SLOTS.sidebar} format="rectangle" minHeight={250} /> */}
-            <Paper variant="outlined" sx={{ p: 2 }}>
-              <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1.7 }}>
-                ข้อมูลทั้งหมดสร้างขึ้นแบบสุ่มเพื่อใช้ทดสอบระบบเท่านั้น ไม่ใช่ข้อมูลบุคคลหรือบัตรจริง
-              </Typography>
-            </Paper>
-          </Stack>
+      <Container maxWidth="lg" sx={{ py: { xs: 3, md: 4 } }}>
+        <Stack spacing={3} sx={{ width: "100%", mx: "auto" }}>
+          <Box role="tabpanel">
+            {tab === "person" && <PersonGenerator />}
+            {tab === "single" && <SingleToolsHub />}
+            {tab === "card" && <CreditCardGenerator />}
+            {tab === "file" && <FileGenerator />}
+            {tab === "history" && <HistoryPanel />}
+          </Box>
         </Stack>
       </Container>
     </Box>
